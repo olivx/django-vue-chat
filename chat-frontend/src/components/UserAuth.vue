@@ -70,6 +70,13 @@ export default {
   },
   methods: {
     signUp () {
+      axios.post('http://127.0.0.1:8000/auth/users/create/', this.$data)
+        .then(reps => {
+          this.signIn()
+        })
+        .catch(error => {
+          console.log(error.response)
+        })
       alert('singUp')
     },
     signIn () {

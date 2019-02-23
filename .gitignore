@@ -1,3 +1,23 @@
 .venv/
 .vscode/
+.env 
+.DS_Store
+
+chat-frontend/node_modulos 
+chat-frontend/node_modules/
+chat-frontend//dist/
+chat-frontend/npm-debug.log*
+chat-frontend/yarn-debug.log*
+chat-frontend/yarn-error.log*
+chat-frontend//test/unit/coverage/
+chat-frontend//test/e2e/reports/
+chat-frontend/selenium-debug.log
+
+# Editor directories and chat-frontend/files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 

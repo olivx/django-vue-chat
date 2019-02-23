@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  db:
+    restart: always
+    image: postgres:10.5-alpine
+    container_name: chatpostgres-container
+    volumes:
+      - postgres_data:/var/lib/postgresql/djangovuechat/data/
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python /app/manage.py runserver 0.0.0.0:8000
+    restart: always
+    container_name: chatapi-container
+    volumes:
+      - .:/app/
+    ports:
+      - 8000:8000
+    environment:
+      - SECRET_KEY=please_change_me
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db
+  vue:
+    build:
+      context: ./chat-frontend
+      dockerfile: Dockerfile
+    restart: always
+    command: npm run dev
+    container_name: chatvue-container
+    ports:
+      - 8080:8080
+    environment:
+      - NODE_ENV=development
+      - ROOT_API=http://127.0.0.1:8000
+
+volumes:
+  postgres_data:

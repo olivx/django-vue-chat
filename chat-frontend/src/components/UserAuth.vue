@@ -1,9 +1,15 @@
 <template>
   <div class="container">
-    <h1 class="text-center">Welcome to Chatire!</h1>
+    <h1 class="text-center">Welcome to DjangoVue Chat</h1>
     <hr>
     <div id="auth-container" class="row">
       <div class="col-sm-6 offset-sm-3">
+        <div v-if="error_message" class="alert alert-danger" role="alert">
+          <li v-for="error in error_message" :key="error">
+            {{error}}
+          </li>
+        </div>
+
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="signup-tab" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="true">Sign Up</a>
@@ -60,35 +66,34 @@
 
 <script>
 import axios from 'axios'
-
 export default {
 
   data () {
     return {
-      email: '', username: '', password: ''
+      email: '', username: '', password: '', error_message: ''
     }
   },
   methods: {
     signUp () {
-      axios.post('http://127.0.0.1:8000/auth/users/create/', this.$data)
+      axios.post(`${process.env.ROOT_API}/auth/users/create/`, this.$data)
         .then(reps => {
           this.signIn()
         })
         .catch(error => {
           console.log(error.response)
         })
-      alert('singUp')
+      signIn ()
     },
     signIn () {
       const credetials = {username: this.username, password: this.password}
-      axios.post('http://127.0.0.1:8000/auth/token/create', credetials)
+      axios.post(`${process.env.ROOT_API}/auth/token/create`, credetials)
         .then(resp => {
           sessionStorage.setItem('auth_token', resp.data.auth_token)
           sessionStorage.setItem('username', this.username)
           this.$router.push('/chats')
         })
         .catch(error => {
-          alert(error.response.data.non_field_errors)
+          this.error_message = error.response.data.non_field_errors
         })
     }
   }
